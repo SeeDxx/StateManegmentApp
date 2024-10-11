@@ -3,19 +3,23 @@ package com.example.statemanegmentapp;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.CheckBox;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private CountViewModel countViewModel;
+    private StateViewModel stateViewModel;
     private TextView textViewCount;
-    private TextView switchButton;
-    private TextView checkBox;
-    private TextView editText;
+    private Switch switchButton;
+    private CheckBox checkBox;
+    private EditText editText;
+    private TextView textChange;
 
     private static final String KEY_COUNT = "count";
     private int count = 0;
@@ -29,15 +33,17 @@ public class MainActivity extends AppCompatActivity {
         Button buttonIncrement = findViewById(R.id.buttonIncrement);
         switchButton = findViewById(R.id.switchButton);
         checkBox = findViewById(R.id.checkBox);
+        textChange = findViewById(R.id.textChange);
         editText = findViewById(R.id.editText);
 
-        countViewModel = new ViewModelProvider(this).get(CountViewModel.class);
+
+        stateViewModel = new ViewModelProvider(this).get(StateViewModel.class);
         updateCountText();
 
         buttonIncrement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                countViewModel.incrementCount();
+                stateViewModel.incrementCount();
 
                 updateCountText();
             }
@@ -46,15 +52,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (switchButton.isChecked()){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+                }
+            }
+        });
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox.isChecked()){
+                    textChange.setVisibility(View.VISIBLE);
+                } else {
+                    textChange.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
-
     private void updateCountText(){
-        textViewCount.setText("Licznik: " + countViewModel.getCount());
+        textViewCount.setText("Licznik: " + stateViewModel.getCount());
+    }
+    private void checkBoxStatus(){
+        checkBox.isChecked();
+        textChange.setVisibility(View.VISIBLE);
     }
 
 }
